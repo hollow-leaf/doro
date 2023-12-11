@@ -1,14 +1,17 @@
 import { Mina, PrivateKey } from "o1js"
 import { get, insert } from "./db.js"
+import { Mental } from "../contract/mental.js"
 // import
 const GenerateKey = () => {
   const key = PrivateKey.random()
   return key
 }
 
-const fromBase58 = (key: string) => {
-  const privateKey = PrivateKey.fromBase58(key)
-  return privateKey
+const setNetwork = () => {
+  const Berkeley = Mina.Network(
+    "https://proxy.berkeley.minaexplorer.com/graphql",
+  )
+  Mina.setActiveInstance(Berkeley)
 }
 
 export const UserKey = async (address: string) => {

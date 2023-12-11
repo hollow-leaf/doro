@@ -6,7 +6,8 @@
       "keyPath": "keys/mental.json",
       "feepayerKeyPath": "/Users/cfh00887059/.cache/zkapp-cli/keys/test-account.json",
       "feepayerAlias": "test-account",
-      "fee": "0.1"
+      "fee": "0.1",
+      "smartContract": "Mental"
     }
   }
 }
