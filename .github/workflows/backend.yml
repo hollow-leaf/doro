@@ -1,0 +1,32 @@
+name: Backend deploy
+
+on: 
+  push:
+    branches: 
+      - main
+    paths:
+      - 'apps/backend/**'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Create Env File
+        run: |
+          touch ./apps/backend/.env
+          echo COUCHDB_PASSWORD=${{secrets.COUCHDB_PASSWORD}} >> ./apps/backend/.env
+          echo COUCHDB_PASSWORD=${{secrets.COUCHDB_PASSWORD}} >> ./apps/backend/.env
+
+      - name: Build and Deploy Docker
+        working-directory: ./apps/backend
+        run: |
+          chmod +x ./scripts/cicd.sh
+          ./scripts/cicd.sh
