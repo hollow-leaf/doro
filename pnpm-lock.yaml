@@ -33,6 +33,9 @@ importers:
       '@babel/preset-typescript':
         specifier: ^7.16.0
         version: 7.23.3(@babel/core@7.23.3)
+      '@repo/eslint-config':
+        specifier: workspace:^
+        version: link:../eslint-config
       '@types/jest':
         specifier: ^27.0.3
         version: 27.5.2
