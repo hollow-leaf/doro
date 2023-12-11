@@ -1,81 +1,57 @@
-# Turborepo starter
+<div align="center">
+<h1>Doro</h1>
 
-This is an official starter Turborepo.
+<p> The Future of Fair Lottery Systems</p>
 
-## Using this example
+<img src="./apps/docs/Doro.png" width="50%" height="50%"></img>
 
-Run the following command:
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE) [![BuildPass](https://img.shields.io/github/actions/workflow/status/hollow-leaf/doro/backend.yml)](https://github.com/hollow-leaf/tobi/deployments)
+</div>
 
-```sh
-npx create-turbo@latest
+### Relate Repo
+- [Mobile App](https://github.com/hollow-leaf/doro-mobile/)
+
+### Problem & Solution
+- Secure and Participative: Doro revolutionizes lottery systems with advanced cryptographic technology. At its core is the ElGamal homomorphic encryption algorithm, ensuring absolute security and fairness.
+
+- How It Works: Each participant's entry is encrypted using ElGamal, a homomorphic encryption method. This encrypted data is then multiplied with a number on the blockchain. This unique process introduces a high level of randomness, making the lottery outcomes truly unpredictable.
+
+- Fairness and Transparency: Prior to the draw, no one knows the sequence of entries, guaranteeing a level playing field for all participants. Doro's use of Zero-Knowledge Proofs (ZKPs) alongside homomorphic encryption further enhances fairness and transparency, allowing for verifiable draws without compromising individual privacy.
+
+- User Engagement: Our system not only ensures fair play but also increases user engagement. Participants can trust the process, knowing their chances are as random and secure as the technology behind it.
+
+- Conclusion: Doro is more than a lottery system; it's a testament to how cryptography can transform user experience and trust in digital platforms. Join us in embracing a new era of fair, secure, and engaging lottery systems.
+
+### Build & Infra
+> Doro is a monorepo managed using turbo. You can find the source code for each package in the `apps` and `packages` directory.
+
+- `apps/backend`
+- `packages/contract` 
+
+### Tech Architecture
+```mermaid
+sequenceDiagram
+    actor A as Admin
+    actor U as User
+    participant C as O1js-Contract
+    participant E as O1js-elgamal
+    participant M as Mina
+
+    %% Compile
+    A ->> C: Compile Mental Contract
+    C ->> M: Deploy Contract
+    
+    %% Contract
+    A ->> E: Create Public Key and Secret
+    E ->> C: Store Public Key on chain
+    C ->> M: Prove and Write Data
+    
+    %% Shuffle
+    C ->> U: Get Public Key
+    U ->> E: Encrypt Secret Value
+    U ->> C: Shuffle and change the random value
+
+    %% Reveal
+    A ->> C: Decrypt with secret
+    C -->> A: Get Decrypt random value and choose the ans from public set
 ```
-
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
