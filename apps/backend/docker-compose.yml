@@ -8,8 +8,9 @@ services:
         restart: always
         networks:
             - doro_network
-        env_file:
-            - .env
+        environment:
+            COUCHDB_USER: ${COUCHDB_USER}
+            COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
         build:
             context: ./
             dockerfile: Dockerfile
