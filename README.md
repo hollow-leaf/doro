@@ -8,6 +8,11 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE) [![BuildPass](https://img.shields.io/github/actions/workflow/status/hollow-leaf/doro/backend.yml)](https://github.com/hollow-leaf/tobi/deployments)
 </div>
 
+### Abstract
+Doro integrates ElGamal homomorphic encryption with zk technology, forging a new path in lottery systems. Each participant contributes their own encrypted random number, which is then multiplied with a blockchain-based number. This process, underpinned by the security of ElGamal encryption, ensures a high degree of randomness and unpredictability in the draw sequence.
+
+Doro isn't just a lottery platform; it's a testament to how cryptographic innovation can create a more equitable and participative digital experience. It's where technology meets fairness in the pursuit of a truly random and secure lottery system.
+
 ### Relate Repo
 - [Mobile App](https://github.com/hollow-leaf/doro-mobile/)
 
