@@ -1,4 +1,12 @@
 {
   "version": 1,
-  "deployAliases": {}
+  "deployAliases": {
+    "mental": {
+      "url": "https://proxy.berkeley.minaexplorer.com/graphql",
+      "keyPath": "keys/mental.json",
+      "feepayerKeyPath": "/Users/cfh00887059/.cache/zkapp-cli/keys/test-account.json",
+      "feepayerAlias": "test-account",
+      "fee": "0.1"
+    }
+  }
 }
