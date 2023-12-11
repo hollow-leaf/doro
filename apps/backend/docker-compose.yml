@@ -1,0 +1,46 @@
+version: '3.7'
+services:
+    doro_backend:
+        container_name: doro_backend
+        image: doro_backend
+        ports:
+            - '8080:8080'
+        restart: always
+        networks:
+            - doro_network
+        env_file:
+            - ./.env
+        build:
+            context: ./
+            dockerfile: Dockerfile
+    couchdb:
+        container_name: doro_couchdb
+        image: couchdb
+        restart: always
+        ports:
+            - '5984:5984'
+        networks:
+            - doro_network
+        env_file:
+            - ./.env
+
+    # caddy:
+    #     container_name: doro_caddy
+    #     image: caddy:latest
+    #     restart: unless-stopped
+    #     ports:
+    #         - "80:80"
+    #         - "443:443"
+    #     volumes:
+    #         - ./scripts/caddy_data:/data
+    #         - ./scripts/caddy_config:/config
+    #         - ./scripts/caddy_config/Caddyfile:/etc/caddy/Caddyfile
+    #     networks:
+    #         - doro_network
+    #         - public_access
+
+networks:
+    public_access:
+    doro_network:
+        name: doro_network
+        driver: bridge
