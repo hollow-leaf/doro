@@ -5,6 +5,13 @@ on:
     branches: 
       - main
     paths:
+      - '.github/**'
+      - 'apps/backend/**'
+  pull_request:
+    branches: 
+      - main
+    paths:
+      - '.github/**'
       - 'apps/backend/**'
   pull_request:
     branches: 
