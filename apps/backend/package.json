@@ -16,7 +16,8 @@
     "ethers": "5.7.2",
     "express": "^4.18.2",
     "nano": "^10.1.3",
-    "o1js": "^0.14.2"
+    "o1js": "^0.13.1",
+    "o1js-elgamal": "^0.0.10"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

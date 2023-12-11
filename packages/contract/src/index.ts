@@ -1,3 +1,3 @@
-import { Add } from "./Add.js"
+import { Mental } from "./mental.js"
 
-export { Add }
+export { Mental }
