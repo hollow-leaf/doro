@@ -9,7 +9,7 @@ services:
         networks:
             - doro_network
         env_file:
-            - ./.env
+            - .env
         build:
             context: ./
             dockerfile: Dockerfile
@@ -21,8 +21,9 @@ services:
             - '5984:5984'
         networks:
             - doro_network
-        env_file:
-            - ./.env
+        environment:
+            COUCHDB_USER: ${COUCHDB_USER}
+            COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
 
     # caddy:
     #     container_name: doro_caddy

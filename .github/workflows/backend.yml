@@ -41,11 +41,16 @@ jobs:
         run: |
           touch ./apps/backend/.env
           echo COUCHDB_PASSWORD=${{secrets.COUCHDB_PASSWORD}} >> ./apps/backend/.env
-          echo COUCHDB_PASSWORD=${{secrets.COUCHDB_PASSWORD}} >> ./apps/backend/.env
+          echo COUCHDB_USER=${{secrets.COUCHDB_USER}} >> ./apps/backend/.env
+
       - name: Build 
         run: pnpm build --filter backend
+        
       - name: Build and Deploy Docker
         working-directory: ./apps/backend
+        env:
+          COUCHDB_USER: ${{secrets.COUCHDB_USER}}
+          COUCHDB_PASSWORD: ${{secrets.COUCHDB_PASSWORD}}
         run: |
           chmod +x ./scripts/cicd.sh
           ./scripts/cicd.sh
