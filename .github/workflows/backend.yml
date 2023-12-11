@@ -40,10 +40,11 @@ jobs:
       - name: Create Env File
         run: |
           touch ./apps/backend/.env
-          echo COUCHDB_PASSWORD=${{secrets.COUCHDB_PASSWORD}} >> ./apps/backend/.env
+          echo COUCHDB_USER=${{secrets.COUCHDB_USER}} >> ./apps/backend/.env
           echo COUCHDB_PASSWORD=${{secrets.COUCHDB_PASSWORD}} >> ./apps/backend/.env
       - name: Build 
         run: pnpm build --filter backend
+        
       - name: Build and Deploy Docker
         working-directory: ./apps/backend
         run: |
