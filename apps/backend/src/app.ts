@@ -13,10 +13,8 @@ app.get("/test", async (req, res) => {
   await setPK()
   await shuffle(2)
   await shuffle(3)
-
+  await shuffle(5)
   await decrypt("999")
-  // const ans = await getAnswer("999")
-  // console.log(ans)
   await reset()
   res.json({ done: true })
 })
