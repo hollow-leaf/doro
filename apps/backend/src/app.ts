@@ -8,16 +8,47 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.get("/game/:id", async (req, res) => {
+app.get("/latest_game", async (req, res) => {
+  const state = {
+    game_id: 1,
+  }
+  res.json(state)
+})
+
+app.get("/get_game/:id", async (req, res) => {
   const id = req.params.id
 
   const state = {
-    join_count: 10,
-    state: 0,
+    game_id: id,
+    game_state: "draw",
+    draw_count: 3,
     max: 10,
-    c: process.env.COUCHDB_PASSWORD || "pass",
+    prize_list: [],
   }
 
+  res.json(state)
+})
+
+app.get("/get_game_user/:id", async (req, res) => {
+  const id = req.params.id
+  const address = req.body.user_address
+
+  const state = {
+    game_id: id,
+    joined: true,
+  }
+
+  res.json(state)
+})
+
+app.post("/reveal/:id", async (req, res) => {
+  const id = req.params.id
+  const address = req.body.user_address
+  const payment = req.body.payment
+  const state = {
+    game_id: id,
+    result: 0,
+  }
   res.json(state)
 })
 
@@ -25,13 +56,6 @@ app.post("/setgame", async (req, res) => {
   const state = req.body.state
 
   res.json({ message: "Set" })
-})
-
-app.post("/join/:id", async (req, res) => {
-  const id = req.params.id
-  const address = req.body.address
-
-  res.json({ message: "Joined", b: process.env.COUCHDB_PASSWORD })
 })
 
 app.post("/user/:address", async (req, res) => {
