@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
-import { UserKey } from "./services/mina.js"
+import { UserKey, contractInteract } from "./services/mina.js"
+import { gameState, latestGame } from "./services/game.js"
 
 const app = express()
 
@@ -8,9 +9,15 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+app.get("/test", async (req, res) => {
+  await contractInteract()
+  res.json({ done: true })
+})
+
 app.get("/latest_game", async (req, res) => {
+  const latest_game = await latestGame()
   const state = {
-    game_id: 1,
+    game_id: latest_game,
   }
   res.json(state)
 })
@@ -18,18 +25,11 @@ app.get("/latest_game", async (req, res) => {
 app.get("/get_game/:id", async (req, res) => {
   const id = req.params.id
 
-  const state = {
-    game_id: id,
-    game_state: "draw",
-    draw_count: 3,
-    max: 10,
-    prize_list: [],
-  }
-
+  const state = await gameState(id)
   res.json(state)
 })
 
-app.get("/get_game_user/:id", async (req, res) => {
+app.post("/get_game_user/:id", async (req, res) => {
   const id = req.params.id
   const address = req.body.user_address
 
