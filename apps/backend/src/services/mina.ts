@@ -1,5 +1,5 @@
-import { Mina, PrivateKey, PublicKey, AccountUpdate } from "o1js"
-import { get, insert } from "./db.js"
+import { Mina, PrivateKey, Field, AccountUpdate } from "o1js"
+import { get, insert, update } from "./db.js"
 import { Mental } from "../contract/mental.js"
 import { ElGamalFF } from "o1js-elgamal"
 // import
@@ -8,23 +8,30 @@ const GenerateKey = () => {
   return key
 }
 let isCompiled = false
-const setNetwork = async () => {
-  const Berkeley = Mina.Network(
-    "https://proxy.berkeley.minaexplorer.com/graphql",
-  )
-  Mina.setActiveInstance(Berkeley)
+let isDeployed = false
+const Local = Mina.LocalBlockchain({ proofsEnabled: true })
+Mina.setActiveInstance(Local)
+const zkappKey = PrivateKey.random()
+const zkappAddress = zkappKey.toPublicKey()
+const zkapp = new Mental(zkappAddress)
+
+const setNetwork = async (local: boolean) => {
   if (!isCompiled) {
     console.log("compiling...")
     await Mental.compile()
     isCompiled = true
   }
-}
-
-const setTestAccount = () => {
-  const key = PrivateKey.fromBase58("EKERrsjtN4us8y9Y2Q3EDFKAju8rkKRynGFmybkG7Ufd6MMvPRbL")
-  return {
-    privateKey: key,
-    publicKey: key.toPublicKey(),
+  if (!isDeployed) {
+    console.log("deploying...")
+    const { privateKey: senderKey, publicKey: sender } = Local.testAccounts[0]
+    const tx = await Mina.transaction(sender, () => {
+      AccountUpdate.fundNewAccount(sender)
+      zkapp.deploy({ zkappKey })
+    })
+    await tx.prove()
+    await tx.sign([senderKey]).send()
+    isDeployed = true
+    console.log("deployed")
   }
 }
 
@@ -43,18 +50,19 @@ export const UserKey = async (address: string) => {
   return { pub: userKey.pub, key: userKey.key }
 }
 
-export const contractInteract = async () => {
-  await setNetwork()
+export const setPK = async () => {
+  await setNetwork(true)
 
-  const { privateKey: senderKey, publicKey: sender } = setTestAccount()
-  console.log(sender.toBase58())
+  const { privateKey: senderKey, publicKey: sender } = Local.testAccounts[0]
 
-  const contractAddr = PublicKey.fromBase58("B62qrmRifvNnkRaKqw62Z84JGS5dn6cAgvZtLXsDpRLRH4zrxjLhCti")
-  const zkapp = new Mental(contractAddr)
-
-  await Mental.compile()
-  console.log(zkapp)
   const { pk, sk } = ElGamalFF.generateKeys()
+  console.log(pk.toBigInt())
+  await update("sk", { sk: sk.toBigInt().toString() })
+  // await update({
+  //   _id: "pk",
+  //   pub: pk.toString(),
+  //   key: sk.,
+  // })
   const tx = await Mina.transaction({ sender, fee: 0.1 * 1e9 }, () => {
     zkapp.setPubKey(pk)
   })
@@ -62,4 +70,34 @@ export const contractInteract = async () => {
   await tx.sign([senderKey]).send()
 
   console.log(zkapp.pk.get())
+}
+
+export const shuffle = async (randomValue: number) => {
+  await setNetwork(true)
+
+  const { privateKey: userKey, publicKey: user } = await Local.testAccounts[1]
+  const tx = await Mina.transaction({ sender: user, fee: 0.1 * 1e9 }, () => {
+    zkapp.shuffleValue(Field(randomValue))
+  })
+  await tx.prove()
+  await tx.sign([userKey]).send()
+  console.log("go")
+}
+
+export const decrypt = async () => {
+  await setNetwork(true)
+  console.log("decrypting...")
+  const { privateKey: senderKey, publicKey: sender } = Local.testAccounts[0]
+
+  const { sk } = await get("sk") as any
+
+  console.log(sk)
+  console.log(Field(Number(sk)))
+  const tx = await Mina.transaction({ sender: sender, fee: 0.1 * 1e9 }, () => {
+    zkapp.decrypt(Field(sk))
+  })
+  await tx.prove()
+  await tx.sign([senderKey]).send()
+
+  console.log(zkapp.result.get())
 }
