@@ -1,7 +1,7 @@
 import express from "express"
 import cors from "cors"
-import { UserKey, setPK, shuffle, decrypt } from "./services/mina.js"
-import { gameState, latestGame } from "./services/game.js"
+import { UserKey, setPK, shuffle, decrypt, reset } from "./services/mina.js"
+import { gameState, getAnswer, joinGame, latestGame, setGameState } from "./services/game.js"
 
 const app = express()
 
@@ -12,10 +12,15 @@ app.use(express.urlencoded({ extended: true }))
 app.get("/test", async (req, res) => {
   await setPK()
   await shuffle(2)
-  await decrypt()
+  await shuffle(3)
+
+  await decrypt("999")
+  // const ans = await getAnswer("999")
+  // console.log(ans)
+  await reset()
   res.json({ done: true })
 })
-
+// get latest game id
 app.get("/latest_game", async (req, res) => {
   const latest_game = await latestGame()
   const state = {
@@ -23,7 +28,7 @@ app.get("/latest_game", async (req, res) => {
   }
   res.json(state)
 })
-
+// get game state
 app.get("/get_game/:id", async (req, res) => {
   const id = req.params.id
 
@@ -47,8 +52,11 @@ app.post("/draw/:id", async (req, res) => {
   const address = req.body.user_address
   const random = req.body.shuffle_number
 
+  await shuffle(Number(random))
+  const num = await joinGame(id, address)
+
   const state = {
-    draw_count: 1,
+    draw_count: num,
     result: true,
   }
   res.json(state)
@@ -66,9 +74,19 @@ app.post("/reveal/:id", async (req, res) => {
 })
 
 app.post("/setgame", async (req, res) => {
-  const state = req.body.state
+  const max = req.body.max
+  const prize_list = req.body.prize_list
+  const game_id = req.body.game_id
+  await setGameState(game_id, "start", max, prize_list)
 
-  res.json({ message: "Set" })
+  const pk = await setPK()
+  res.json({ message: "Set", pk: pk })
+})
+
+app.get("/decrypt/:id", async (req, res) => {
+  const id = req.params.id
+  const result = await decrypt(id)
+  res.json({ result: result })
 })
 
 app.post("/user/:address", async (req, res) => {

@@ -3,10 +3,6 @@ import { get, insert, update } from "./db.js"
 import { Mental } from "../contract/mental.js"
 import { ElGamalFF } from "o1js-elgamal"
 // import
-const GenerateKey = () => {
-  const key = PrivateKey.random()
-  return key
-}
 let isCompiled = false
 let isDeployed = false
 const Local = Mina.LocalBlockchain({ proofsEnabled: true })
@@ -15,9 +11,14 @@ const zkappKey = PrivateKey.random()
 const zkappAddress = zkappKey.toPublicKey()
 const zkapp = new Mental(zkappAddress)
 
-const setNetwork = async (local: boolean) => {
+const GenerateKey = () => {
+  const key = PrivateKey.random()
+  return key
+}
+
+const setNetwork = async () => {
   if (!isCompiled) {
-    console.log("compiling...")
+    console.log("compiling contract...")
     await Mental.compile()
     isCompiled = true
   }
@@ -31,7 +32,7 @@ const setNetwork = async (local: boolean) => {
     await tx.prove()
     await tx.sign([senderKey]).send()
     isDeployed = true
-    console.log("deployed")
+    console.log(`zkapp deployed at ${zkappAddress.toBase58()}`)
   }
 }
 
@@ -51,53 +52,65 @@ export const UserKey = async (address: string) => {
 }
 
 export const setPK = async () => {
-  await setNetwork(true)
+  await setNetwork()
 
   const { privateKey: senderKey, publicKey: sender } = Local.testAccounts[0]
 
   const { pk, sk } = ElGamalFF.generateKeys()
-  console.log(pk.toBigInt())
-  await update("sk", { sk: sk.toBigInt().toString() })
-  // await update({
-  //   _id: "pk",
-  //   pub: pk.toString(),
-  //   key: sk.,
-  // })
+  console.log("ElGamal Public Key", pk.toString())
+  await update("sk", { sk: sk.toBigInt().toString(), pk: pk.toBigInt().toString() })
   const tx = await Mina.transaction({ sender, fee: 0.1 * 1e9 }, () => {
     zkapp.setPubKey(pk)
   })
   await tx.prove()
   await tx.sign([senderKey]).send()
 
-  console.log(zkapp.pk.get())
+  console.log("Set ElGamal Public Key to zkapp")
+  const epk = zkapp.pk.get()
+  return epk.toBigInt().toString()
 }
 
 export const shuffle = async (randomValue: number) => {
-  await setNetwork(true)
+  await setNetwork()
 
   const { privateKey: userKey, publicKey: user } = await Local.testAccounts[1]
+  console.log("Shuffling...")
   const tx = await Mina.transaction({ sender: user, fee: 0.1 * 1e9 }, () => {
     zkapp.shuffleValue(Field(randomValue))
   })
   await tx.prove()
   await tx.sign([userKey]).send()
-  console.log("go")
+  console.log("Shuffled")
 }
 
-export const decrypt = async () => {
-  await setNetwork(true)
-  console.log("decrypting...")
+export const decrypt = async (game_id: string) => {
+  await setNetwork()
+
+  console.log("Decrypting...")
   const { privateKey: senderKey, publicKey: sender } = Local.testAccounts[0]
 
   const { sk } = await get("sk") as any
 
-  console.log(sk)
-  console.log(Field(Number(sk)))
   const tx = await Mina.transaction({ sender: sender, fee: 0.1 * 1e9 }, () => {
     zkapp.decrypt(Field(sk))
   })
   await tx.prove()
   await tx.sign([senderKey]).send()
 
-  console.log(zkapp.result.get())
+  const result = zkapp.result.get().toBigInt().toString()
+  console.log("Decrypted Result:", result)
+  await update(`result/${game_id}`, { result: result })
+  return result
+}
+
+export const reset = async () => {
+  await setNetwork()
+
+  const { privateKey: senderKey, publicKey: sender } = Local.testAccounts[0]
+  const tx = await Mina.transaction({ sender: sender, fee: 0.1 * 1e9 }, () => {
+    zkapp.reset()
+  })
+  await tx.prove()
+  await tx.sign([senderKey]).send()
+  console.log("End Game")
 }
