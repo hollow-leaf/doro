@@ -11,6 +11,7 @@ services:
         environment:
             COUCHDB_USER: ${COUCHDB_USER}
             COUCHDB_PASSWORD: ${COUCHDB_PASSWORD}
+            COUCHDB_URL: couchdb
         build:
             context: ./
             dockerfile: Dockerfile
