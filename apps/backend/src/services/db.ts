@@ -17,7 +17,7 @@ export const getCouchdb = () => {
   const couchdb = dbConfig({
     user: process.env.COUCHDB_USER || "admin",
     password: process.env.COUCHDB_PASSWORD || "password",
-    host: "localhost",
+    host: process.env.COUCHDB_URL || "localhost",
     port: 5984,
   })
   return couchdb
