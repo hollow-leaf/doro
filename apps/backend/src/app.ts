@@ -40,6 +40,17 @@ app.post("/get_game_user/:id", async (req, res) => {
 
   res.json(state)
 })
+app.post("/draw/:id", async (req, res) => {
+  const id = req.params.id
+  const address = req.body.user_address
+  const random = req.body.shuffle_number
+
+  const state = {
+    draw_count: 1,
+    result: true,
+  }
+  res.json(state)
+})
 
 app.post("/reveal/:id", async (req, res) => {
   const id = req.params.id
@@ -47,7 +58,7 @@ app.post("/reveal/:id", async (req, res) => {
   const payment = req.body.payment
   const state = {
     game_id: id,
-    result: 0,
+    result: [],
   }
   res.json(state)
 })
