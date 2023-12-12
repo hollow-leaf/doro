@@ -24,6 +24,7 @@ const { privateKey: userKey, publicKey: user } = Local.testAccounts[1]
 const zkappKey = PrivateKey.random()
 const zkappAddress = zkappKey.toPublicKey()
 
+console.log(zkappAddress)
 const zkapp = new Mental(zkappAddress)
 const { pk, sk } = ElGamalFF.generateKeys()
 
