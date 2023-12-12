@@ -1,6 +1,6 @@
 import express from "express"
 import cors from "cors"
-import { UserKey, contractInteract } from "./services/mina.js"
+import { UserKey, setPK, shuffle, decrypt } from "./services/mina.js"
 import { gameState, latestGame } from "./services/game.js"
 
 const app = express()
@@ -10,7 +10,9 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.get("/test", async (req, res) => {
-  await contractInteract()
+  await setPK()
+  await shuffle(2)
+  await decrypt()
   res.json({ done: true })
 })
 
