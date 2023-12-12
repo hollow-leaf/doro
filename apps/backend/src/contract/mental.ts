@@ -10,7 +10,6 @@ import { Cipher, ElGamalFF } from "o1js-elgamal"
 
 export class Mental extends SmartContract {
   @state(Cipher) c1 = State<Cipher>()
-  @state(Cipher) ans = State<Cipher>()
   @state(Field) pk = State<Field>()
   @state(Field) result = State<Field>()
 
@@ -28,12 +27,12 @@ export class Mental extends SmartContract {
     this.pk.assertEquals(pk)
 
     const product = c1.mul(ElGamalFF.encrypt(randomValue, pk))
-    this.ans.set(product)
+    this.c1.set(product)
   }
 
   @method decrypt (secretKey: Field) {
-    const result = this.ans.get()
-    this.ans.assertEquals(result)
+    const result = this.c1.get()
+    this.c1.assertEquals(result)
 
     const plainText = ElGamalFF.decrypt(result, secretKey)
     this.result.set(plainText as any)
