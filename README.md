@@ -3,18 +3,13 @@
 
 <p> The Future of Fair Lottery Systems</p>
 
-<img src="./apps/docs/Doro.png" width="50%" height="50%"></img>
-
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE) [![BuildPass](https://img.shields.io/github/actions/workflow/status/hollow-leaf/doro/backend.yml)](https://github.com/hollow-leaf/tobi/deployments)
+<img src="https://github.com/hollow-leaf/doro/raw/main/apps/docs/Doro.png" width="50%" height="50%"></img>
 </div>
 
-### Abstract
-Doro integrates ElGamal homomorphic encryption with zk technology, forging a new path in lottery systems. Each participant contributes their own encrypted random number, which is then multiplied with a blockchain-based number. This process, underpinned by the security of ElGamal encryption, ensures a high degree of randomness and unpredictability in the draw sequence.
 
-Doro isn't just a lottery platform; it's a testament to how cryptographic innovation can create a more equitable and participative digital experience. It's where technology meets fairness in the pursuit of a truly random and secure lottery system.
-
-### Relate Repo
+### Relate Repo & Demo Link
 - [Mobile App](https://github.com/hollow-leaf/doro-mobile/)
+- [Berkeley ZKapp: 62qrmRifvNnkRaKqw62Z84JGS5dn6cAgvZtLXsDpRLRH4zrxjLhCti ](https://minascan.io/berkeley/account/B62qrmRifvNnkRaKqw62Z84JGS5dn6cAgvZtLXsDpRLRH4zrxjLhCti/zkApp?type=zk-acc)
 
 ### Problem & Solution
 - Secure and Participative: Doro revolutionizes lottery systems with advanced cryptographic technology. At its core is the ElGamal homomorphic encryption algorithm, ensuring absolute security and fairness.
@@ -27,6 +22,12 @@ Doro isn't just a lottery platform; it's a testament to how cryptographic innova
 
 - Conclusion: Doro is more than a lottery system; it's a testament to how cryptography can transform user experience and trust in digital platforms. Join us in embracing a new era of fair, secure, and engaging lottery systems.
 
+### Tech Stack 
+- `Mina Protocal`: Berkeley Contract
+- `o1js-elgamal`: for encrypt random value
+- `react native`: build hybrid mobile application
+- `express`: mobile interact with chain
+ 
 ### Build & Infra
 > Doro is a monorepo managed using turbo. You can find the source code for each package in the `apps` and `packages` directory.
 
