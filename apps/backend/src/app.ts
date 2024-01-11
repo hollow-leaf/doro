@@ -80,6 +80,7 @@ app.post("/reveal/:id", async (req, res) => {
   res.json(state)
 })
 
+// TODO: delete this set game (only use game id)
 app.post("/setgame", async (req, res) => {
   const max = req.body.max
   const prize_list = req.body.prize_list
@@ -88,6 +89,12 @@ app.post("/setgame", async (req, res) => {
 
   const pk = await setPK()
   res.json({ message: "Set", pk: pk })
+})
+
+// only for test, not in production
+app.get("/generate_key", async (req, res) => {
+  const pk = await setPK()
+  res.json({ pk: pk })
 })
 
 app.get("/decrypt/:id", async (req, res) => {
