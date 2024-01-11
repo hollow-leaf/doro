@@ -18,6 +18,7 @@ app.get("/test", async (req, res) => {
   await reset()
   res.json({ done: true })
 })
+
 // get latest game id
 app.get("/latest_game", async (req, res) => {
   const latest_game = await latestGame()
@@ -26,6 +27,14 @@ app.get("/latest_game", async (req, res) => {
   }
   res.json(state)
 })
+
+// app get answer
+app.get("/get_answer/:id", async (req, res) => {
+  const id = req.params.id
+  const answer = await getAnswer(id)
+  res.json({ answer: answer })
+})
+
 // get game state
 app.get("/get_game/:id", async (req, res) => {
   const id = req.params.id
