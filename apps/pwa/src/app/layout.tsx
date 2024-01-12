@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-const APP_NAME = "Doro";
+const APP_NAME = "Doro1";
 const APP_DESCRIPTION = "This is an example of using Serwist with Next.js";
 
 const inter = Inter({ subsets: ["latin"] });

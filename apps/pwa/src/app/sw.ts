@@ -8,7 +8,7 @@ declare const self: ServiceWorkerGlobalScope & {
 };
 
 // Anything random.
-const revision = crypto.randomUUID();
+const revision = crypto.randomUUID() + 1;
 
 installSerwist({
   precacheEntries: self.__SW_MANIFEST,
