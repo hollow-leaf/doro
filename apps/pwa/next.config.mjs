@@ -3,7 +3,7 @@ import withSerwistInit from "@serwist/next";
 
 const withSerwist = withSerwistInit({
   cacheOnFrontEndNav: true,
-  swSrc: "app/sw.ts",
+  swSrc: "src/app/sw.ts",
   swDest: "public/sw.js",
 });
 
