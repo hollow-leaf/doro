@@ -8,8 +8,9 @@
 
 
 ### Relate Repo & Demo Link
-- [Youtube: Demo Link](https://youtu.be/aE60gMIqetU)
 - [Mobile App](https://github.com/hollow-leaf/doro-mobile/)
+
+### Contracts
 - [Berkeley ZKapp: 62qrmRifvNnkRaKqw62Z84JGS5dn6cAgvZtLXsDpRLRH4zrxjLhCti ](https://minascan.io/berkeley/account/B62qrmRifvNnkRaKqw62Z84JGS5dn6cAgvZtLXsDpRLRH4zrxjLhCti/zkApp?type=zk-acc)
 
 ### Problem & Solution
@@ -33,6 +34,7 @@
 > Doro is a monorepo managed using turbo. You can find the source code for each package in the `apps` and `packages` directory.
 
 - `apps/backend`
+- `apps/serverless` (not yet online)
 - `packages/contract` 
 
 ### Tech Architecture
