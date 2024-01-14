@@ -10,7 +10,6 @@ import {
 } from "o1js"
 import { Cipher, ElGamalFF } from "o1js-elgamal"
 
-// 定義一個遊戲資訊的結構
 class GameInfo extends MerkleWitness(8) {
   @state(Field) gameId = State<Field>()
   @state(Field) result = State<Field>()
@@ -22,7 +21,6 @@ export class Mental extends SmartContract {
   @state(Field) result = State<Field>()
   @state(MerkleTree) gameTree = State<MerkleTree>()
 
-  // 輔助函數，用於初始化 Merkle Tree
   private initGameTree() {
     if (!isReady(this.gameTree)) {
       this.gameTree.set(new MerkleTree(8))
