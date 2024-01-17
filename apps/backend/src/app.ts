@@ -18,6 +18,7 @@ app.get("/test", async (req, res) => {
   await reset()
   res.json({ done: true })
 })
+
 // get latest game id
 app.get("/latest_game", async (req, res) => {
   const latest_game = await latestGame()
@@ -26,6 +27,14 @@ app.get("/latest_game", async (req, res) => {
   }
   res.json(state)
 })
+
+// app get answer
+app.get("/get_answer/:id", async (req, res) => {
+  const id = req.params.id
+  const answer = await getAnswer(id)
+  res.json({ answer: answer })
+})
+
 // get game state
 app.get("/get_game/:id", async (req, res) => {
   const id = req.params.id
@@ -71,6 +80,7 @@ app.post("/reveal/:id", async (req, res) => {
   res.json(state)
 })
 
+// TODO: delete this set game (only use game id)
 app.post("/setgame", async (req, res) => {
   const max = req.body.max
   const prize_list = req.body.prize_list
@@ -79,6 +89,12 @@ app.post("/setgame", async (req, res) => {
 
   const pk = await setPK()
   res.json({ message: "Set", pk: pk })
+})
+
+// only for test, not in production
+app.get("/generate_key", async (req, res) => {
+  const pk = await setPK()
+  res.json({ pk: pk })
 })
 
 app.get("/decrypt/:id", async (req, res) => {
