@@ -43,7 +43,7 @@ app.get("/get_game/:id", async (req, res) => {
   res.json(state)
 })
 
-app.post("/get_game_user/:id", async (req, res) => {
+app.post("/get_game_user/:id", (req, res) => {
   const id = req.params.id
   const address = req.body.user_address
 
@@ -82,6 +82,13 @@ app.post("/reveal/:id", (req, res) => {
 })
 
 app.post("/gameLobby", async (req, res) => {
+  const max = req.body.max
+  const prize_list = req.body.prize_list
+  const game_id = req.body.game_id
+  await setGameState(game_id, "start", max, prize_list)
+})
+
+app.post("/lobbyTestData", async (req, res) => {
   const max = req.body.max
   const prize_list = req.body.prize_list
   const game_id = req.body.game_id
