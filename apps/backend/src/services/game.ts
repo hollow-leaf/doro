@@ -9,7 +9,7 @@ export const latestGame = async () => {
   return game_id
 }
 
-const gamePlus = async () => {
+export const gamePlus = async () => {
   const { game_id } = await get("latest_game") as any
   await update("latest_game", {
     game_id: game_id + 1,
