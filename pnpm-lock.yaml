@@ -57,6 +57,9 @@ importers:
 
   apps/serverless:
     dependencies:
+      '@hono/swagger-ui':
+        specifier: ^0.2.1
+        version: 0.2.1(hono@3.12.5)
       '@hono/zod-openapi':
         specifier: ^0.9.5
         version: 0.9.5(hono@3.12.5)(zod@3.22.4)
@@ -2062,6 +2065,14 @@ packages:
     resolution: {integrity: sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==}
     engines: {node: '>=14'}
     dev: true
+
+  /@hono/swagger-ui@0.2.1(hono@3.12.5):
+    resolution: {integrity: sha512-wBxVMRe3/v8xH4o6icmwztiIq0DG0s7+jHVMHVUAoFFCWEQNL2iskMmQtrhSDtsFmBZUeUFQUaaJ6Ir6DOmHLA==}
+    peerDependencies:
+      hono: '*'
+    dependencies:
+      hono: 3.12.5
+    dev: false
 
   /@hono/zod-openapi@0.9.5(hono@3.12.5)(zod@3.22.4):
     resolution: {integrity: sha512-Px8QEIr5RyDeHQn51Ihnwtl//foFvd/F6yBq6o/3pVMUpoV6X4JZ+srgUrOX2VRrInpLVEP/NaroXlfvarwIxA==}

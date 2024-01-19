@@ -5,6 +5,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@hono/swagger-ui": "^0.2.1",
     "@hono/zod-openapi": "^0.9.5",
     "hono": "^3.12.5",
     "zod": "^3.22.4"
