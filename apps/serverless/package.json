@@ -3,6 +3,7 @@
     "dev": "wrangler dev src/app.ts",
     "deploy": "wrangler deploy --minify src/app.ts"
   },
+  "type": "module",
   "dependencies": {
     "@hono/zod-openapi": "^0.9.5",
     "hono": "^3.12.5",
@@ -10,6 +11,8 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20231218.0",
+    "o1js": "^0.13.1",
+    "ts-node": "^10.9.2",
     "wrangler": "^3.22.0"
   }
 }
