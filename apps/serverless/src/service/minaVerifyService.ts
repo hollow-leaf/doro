@@ -6,8 +6,8 @@ export const sign = (message: string, privateKey: string) => {
   return sign
 }
 
-function main () {
-  console.log(sign('hi', 'EKFGnwBs3Bo9rftniAELWchhhduhyD1AuJtqanFTJba1kegP5QRx'))
-} 
-
-main()
+export const verify = (data: any, signature: any, publicKey: string) => {
+  const client = new Client({ network: 'testnet' })
+  let verify = client.verifyMessage({data, signature, publicKey})
+  return verify
+}

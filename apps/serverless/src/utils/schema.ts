@@ -1,6 +1,6 @@
 import z from 'zod'
 
-export function createSchema(name: string, fields: { [key: string]: { type: 'string' | 'number', example: string | number } }) {
+export function createSchema(name: string, fields: { [key: string]: { type: 'string' | 'number' | 'boolean', example: string | number } }) {
   const schema: { [key: string]: z.ZodTypeAny } = {}; // Fix: Specify the type of 'schema' variable
   for (const field in fields) {
     schema[field] = z[fields[field].type]().openapi({
