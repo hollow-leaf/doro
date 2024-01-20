@@ -1,16 +1,13 @@
-import { PrivateKey, Field, Signature } from "o1js";
+import Client from 'mina-signer'
 
-export const sign = (message: Field[], privateKey: PrivateKey) => {
-  const sig = Signature.create(privateKey, message);
-  return sig
+export const sign = (message: string, privateKey: string) => {
+  const client = new Client({ network: 'testnet' })
+  let sign = client.signMessage(message, privateKey)
+  return sign
 }
 
 function main () {
-  const pv = PrivateKey.random()
-  const pub = pv.toPublicKey()
-
-  const sig = sign([Field(1), Field(2)], pv)
-  console.log('sig: ', sig)
+  console.log(sign('hi', 'EKFGnwBs3Bo9rftniAELWchhhduhyD1AuJtqanFTJba1kegP5QRx'))
 } 
 
 main()

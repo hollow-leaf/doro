@@ -8,12 +8,20 @@
     "@hono/swagger-ui": "^0.2.1",
     "@hono/zod-openapi": "^0.9.5",
     "hono": "^3.12.5",
+    "mina-signer": "^2.1.1",
+    "o1js": "^0.13.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.23.7",
+    "@babel/generator": "^7.23.6",
+    "@babel/parser": "^7.23.6",
+    "@babel/plugin-transform-runtime": "^7.23.7",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/traverse": "^7.23.7",
     "@cloudflare/workers-types": "^4.20231218.0",
-    "o1js": "^0.13.1",
+    "esbuild": "^0.19.11",
     "ts-node": "^10.9.2",
-    "wrangler": "^3.22.0"
+    "wrangler": "^3.23.0"
   }
 }
