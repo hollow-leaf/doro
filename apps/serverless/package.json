@@ -7,6 +7,7 @@
   "dependencies": {
     "@hono/swagger-ui": "^0.2.1",
     "@hono/zod-openapi": "^0.9.5",
+    "axios": "^1.6.5",
     "hono": "^3.12.5",
     "mina-signer": "^2.1.1",
     "o1js": "^0.13.1",
