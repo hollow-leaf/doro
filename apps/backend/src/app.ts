@@ -1,7 +1,7 @@
 import express from "express"
 import cors from "cors"
 import { UserKey, setPK, shuffle, decrypt, reset } from "./services/mina.js"
-import { gameState, getAnswer, joinGame, latestGame, setGameState } from "./services/game.js"
+import { gameState, getAnswer, joinGame, gamePlus, latestGame, setGameState } from "./services/game.js"
 
 const app = express()
 
@@ -18,6 +18,7 @@ app.get("/test", async (req, res) => {
   await reset()
   res.json({ done: true })
 })
+
 // get latest game id
 app.get("/latest_game", async (req, res) => {
   const latest_game = await latestGame()
@@ -26,6 +27,14 @@ app.get("/latest_game", async (req, res) => {
   }
   res.json(state)
 })
+
+// app get answer
+app.get("/get_answer/:id", async (req, res) => {
+  const id = req.params.id
+  const answer = await getAnswer(id)
+  res.json({ answer: answer })
+})
+
 // get game state
 app.get("/get_game/:id", async (req, res) => {
   const id = req.params.id
@@ -34,7 +43,7 @@ app.get("/get_game/:id", async (req, res) => {
   res.json(state)
 })
 
-app.post("/get_game_user/:id", async (req, res) => {
+app.post("/get_game_user/:id", (req, res) => {
   const id = req.params.id
   const address = req.body.user_address
 
@@ -45,6 +54,7 @@ app.post("/get_game_user/:id", async (req, res) => {
 
   res.json(state)
 })
+
 app.post("/draw/:id", async (req, res) => {
   const id = req.params.id
   const address = req.body.user_address
@@ -60,7 +70,7 @@ app.post("/draw/:id", async (req, res) => {
   res.json(state)
 })
 
-app.post("/reveal/:id", async (req, res) => {
+app.post("/reveal/:id", (req, res) => {
   const id = req.params.id
   const address = req.body.user_address
   const payment = req.body.payment
@@ -71,6 +81,21 @@ app.post("/reveal/:id", async (req, res) => {
   res.json(state)
 })
 
+app.post("/gameLobby", async (req, res) => {
+  const max = req.body.max
+  const prize_list = req.body.prize_list
+  const game_id = req.body.game_id
+  await setGameState(game_id, "start", max, prize_list)
+})
+
+app.post("/lobbyTestData", async (req, res) => {
+  const max = req.body.max
+  const prize_list = req.body.prize_list
+  const game_id = req.body.game_id
+  await setGameState(game_id, "start", max, prize_list)
+})
+
+// TODO: delete this set game (only use game id)
 app.post("/setgame", async (req, res) => {
   const max = req.body.max
   const prize_list = req.body.prize_list
@@ -79,6 +104,12 @@ app.post("/setgame", async (req, res) => {
 
   const pk = await setPK()
   res.json({ message: "Set", pk: pk })
+})
+
+// only for test, not in production
+app.get("/generate_key", async (req, res) => {
+  const pk = await setPK()
+  res.json({ pk: pk })
 })
 
 app.get("/decrypt/:id", async (req, res) => {

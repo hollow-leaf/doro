@@ -7,11 +7,12 @@ import {
   shutdown,
 } from "o1js"
 import { ElGamalFF } from "o1js-elgamal"
-import { Mental } from "./mental.js"
+import { Mental } from "./mental"
 
 const doProofs = true
 
 await isReady
+
 // test
 const Local = Mina.LocalBlockchain({ proofsEnabled: doProofs })
 Mina.setActiveInstance(Local)
@@ -45,23 +46,31 @@ tx = await Mina.transaction(sender, () => {
 await tx.prove()
 await tx.sign([senderKey]).send()
 
+console.log("Start Game")
+const gameId = Field(1)
+tx = await Mina.transaction(sender, () => {
+  zkapp.startGame(gameId)
+})
+await tx.prove()
+await tx.sign([senderKey]).send()
+
 console.log("User Shuffle")
+const randomValue = Field(5)
 tx = await Mina.transaction(user, () => {
-  const randomValue = Math.floor(Math.random() * 10) + 1
-  zkapp.shuffleValue(Field(randomValue))
+  zkapp.shuffleValue(gameId, randomValue)
 })
 await tx.prove()
 await tx.sign([userKey]).send()
 
 console.log("decrypt")
 tx = await Mina.transaction(sender, () => {
-  zkapp.decrypt(sk)
+  zkapp.decrypt(sk, gameId)
 })
 await tx.prove()
 await tx.sign([senderKey]).send()
 
 console.log(zkapp.result.get())
-// zkapp.result.get().assertEquals(2)
+// zkapp.result.get().assertEquals(5)
 
 console.log("reset")
 tx = await Mina.transaction(sender, () => {

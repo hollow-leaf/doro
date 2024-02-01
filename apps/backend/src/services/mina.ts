@@ -2,9 +2,11 @@ import { Mina, PrivateKey, Field, AccountUpdate } from "o1js"
 import { get, insert, update } from "./db.js"
 import { Mental } from "../contract/mental.js"
 import { ElGamalFF } from "o1js-elgamal"
-// import
+
 let isCompiled = false
 let isDeployed = false
+
+// TODO: delete this local blockchain
 const Local = Mina.LocalBlockchain({ proofsEnabled: true })
 Mina.setActiveInstance(Local)
 const zkappKey = PrivateKey.random()
