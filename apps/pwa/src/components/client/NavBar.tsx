@@ -11,7 +11,7 @@ export default function NavBar({ className }: { className?: string }) {
     <>
       <nav
         className={cn(
-          "fixed bottom-0 flex h-[5.5rem] w-full select-none items-center justify-around overflow-hidden border-t bg-white/80 backdrop-blur backdrop-saturate-200 ",
+          "fixed bottom-0 flex h-[5.5rem] w-full select-none items-center justify-around overflow-hidden border-t backdrop-blur backdrop-saturate-200 ",
           className,
         )}
       >
