@@ -4,7 +4,6 @@ import "./styles/globals.css";
 import { NavLinksProvider } from "@/context/NavLinksProvider";
 import { Viewport } from "next";
 import { ThemeProvider } from "@/components/theme-provider"
-import { Toaster } from "@/components/ui/toaster"
 
 const APP_NAME = "Doro";
 const APP_DESCRIPTION = "This is an example of using Serwist with Next.js";
@@ -57,7 +56,6 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
-            <Toaster />
           </ThemeProvider>
         </body>
       </NavLinksProvider>
