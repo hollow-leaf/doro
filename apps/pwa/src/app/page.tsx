@@ -1,11 +1,10 @@
-'use client';
-import { useEffect } from 'react';
-import Navigator from './navigator'
-export default function Index() {
+'use client'
 
-  return (
-    <>
-      <Navigator />
-    </>
-  )
+import { useEffect } from 'react';
+import { redirect } from "next/navigation";
+
+export default function Index() {
+  redirect("/client");
+
+  return null
 }
