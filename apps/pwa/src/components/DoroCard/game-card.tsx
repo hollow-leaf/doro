@@ -11,7 +11,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 
-type PublicCardProps = React.ComponentProps<typeof Card> & {
+type GameCardProps = React.ComponentProps<typeof Card> & {
     id: string,
     prize: string,
     type: string,
@@ -21,7 +21,7 @@ type PublicCardProps = React.ComponentProps<typeof Card> & {
     creator: string
 };
 
-export function PublicCard({ className, ...props }: PublicCardProps) {
+export function GameCard({ className, ...props }: GameCardProps) {
     return (
         <Card
             className={cn(
@@ -34,11 +34,14 @@ export function PublicCard({ className, ...props }: PublicCardProps) {
                 <div className="flex text-xl font-roboto-bold items-center justify-end">
                 </div>
                 <CardTitle>
-                    <div className="pb-4 border-b">{props.title}</div>
+                    <div className="border-b">{props.title}</div>
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <>{props.prize}</>
+                <div className="flex flex-col">
+                    <div>{props.prize}</div>
+                    <div>{props.seatLimit - props.emptySeat} / {props.seatLimit}</div>
+                </div>
             </CardContent>
             <CardFooter className="flex justify-end">
                 {props.creator}

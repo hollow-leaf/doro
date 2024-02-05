@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./styles/globals.css";
 import { NavLinksProvider } from "@/context/NavLinksProvider";
 import { Viewport } from "next";
+import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
 
 const APP_NAME = "Doro";
 const APP_DESCRIPTION = "This is an example of using Serwist with Next.js";
@@ -47,7 +49,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <NavLinksProvider>
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </body>
       </NavLinksProvider>
     </html>
   );

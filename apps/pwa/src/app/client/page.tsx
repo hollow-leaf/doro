@@ -1,7 +1,7 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Container from "@/components/ui/container";
-import { PublicCard } from '@/components/DoroCard/public-card'
+import { GameCard } from '@/components/DoroCard/game-card'
 import {
     Card,
     CardContent,
@@ -96,7 +96,7 @@ export default function Page() {
                         <Card>
                             <CardContent className="p-6 space-y-4">
                                 {publicList.map((game, index) => (
-                                    <PublicCard
+                                    <GameCard
                                         key={index}
                                         id={game.id}
                                         title={game.title}
@@ -115,7 +115,7 @@ export default function Page() {
                         <Card>
                             <CardContent className="p-6 space-y-4">
                                 {privateList.map((game, index) => (
-                                    <PublicCard
+                                    <GameCard
                                         key={index}
                                         id={game.id}
                                         title={game.title}
