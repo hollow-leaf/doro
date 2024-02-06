@@ -6,7 +6,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Spinner } from "@/components/Spinner";
-import { Separator } from "@/components/ui/separator";
 import { delay } from "@/lib/utils";
 
 export default function page() {

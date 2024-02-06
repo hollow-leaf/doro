@@ -1,14 +1,9 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import Container from "@/components/ui/container";
 import { GameCard } from '@/components/DoroCard/game-card'
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
 } from "@/components/ui/card"
 import { useEffect, useState } from 'react'
 
