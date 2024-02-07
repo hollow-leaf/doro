@@ -30,8 +30,8 @@ export const NavLinksProvider = ({ children }: { children: ReactNode }) => {
       iconSelected: <Home size={26} strokeWidth={2.5} />,
     },
     {
-      href: "/client/roulette",
-      label: "Roulette",
+      href: "/client/doro",
+      label: "Doro",
       icon: <Dices size={26} />,
       iconSelected: <Dices size={26} strokeWidth={2.5} />,
     },
