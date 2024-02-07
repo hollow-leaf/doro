@@ -1,11 +1,13 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { GameCard } from '@/components/DoroCard/game-card'
 import {
     Card,
     CardContent,
 } from "@/components/ui/card"
 import { useEffect, useState } from 'react'
+
+import { PublicGame } from "@/components/DoroCard/public-game";
+import { PrivateGame } from "@/components/DoroCard/private-game";
 
 export default function Page() {
     const mockPublicList = [
@@ -41,46 +43,13 @@ export default function Page() {
         },
     ]
 
-    const mockPrivateList = [
-        {
-            id: "4",
-            title: "Private Game 1",
-            prize: "100 U",
-            type: "private",
-            fee: 0,
-            seatLimit: 20,
-            emptySeat: 10,
-            creator: "A"
-        },
-        {
-            id: "5",
-            title: "Private Game 2",
-            prize: "100 U",
-            type: "private",
-            fee: 0,
-            seatLimit: 20,
-            emptySeat: 10,
-            creator: "B"
-        },
-        {
-            id: "6",
-            title: "Private Game 3",
-            prize: "100 U",
-            type: "private",
-            fee: 0,
-            seatLimit: 20,
-            emptySeat: 10,
-            creator: "C"
-        },
-    ]
     const [publicList, setPublicList] = useState(mockPublicList)
-    const [privateList, setPrivateList] = useState(mockPrivateList)
 
     return (
         <main>
             <div className='flex flex-col justify-center items-center'>
                 <div className='font-roboto text-3xl font-bold mb-4'>
-                    Lobby
+                    Game
                 </div>
                 <Tabs defaultValue="public" className="w-full">
                     <TabsList className="grid w-full grid-cols-2">
@@ -91,7 +60,7 @@ export default function Page() {
                         <Card>
                             <CardContent className="p-6 space-y-4">
                                 {publicList.map((game, index) => (
-                                    <GameCard
+                                    <PublicGame
                                         key={index}
                                         id={game.id}
                                         title={game.title}
@@ -109,19 +78,7 @@ export default function Page() {
                     <TabsContent value="private">
                         <Card>
                             <CardContent className="p-6 space-y-4">
-                                {privateList.map((game, index) => (
-                                    <GameCard
-                                        key={index}
-                                        id={game.id}
-                                        title={game.title}
-                                        prize={game.prize}
-                                        type={game.type}
-                                        fee={game.fee}
-                                        seatLimit={game.seatLimit}
-                                        emptySeat={game.emptySeat}
-                                        creator={game.creator}
-                                    />
-                                ))}
+                                <PrivateGame />
                             </CardContent>
                         </Card>
                     </TabsContent>

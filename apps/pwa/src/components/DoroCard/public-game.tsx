@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import {
     Dialog,
     DialogContent,
@@ -10,8 +10,8 @@ import {
     DialogClose
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
@@ -19,12 +19,12 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import { Spinner } from "@/components/Spinner";
-import { delay } from "@/lib/utils";
+} from "@/components/ui/card"
+import { Spinner } from "@/components/Spinner"
+import { delay } from "@/lib/utils"
 import {
     PartyPopperIcon
-} from "lucide-react";
+} from "lucide-react"
 
 type GameCardProps = React.ComponentProps<typeof Card> & {
     id: string,
@@ -34,17 +34,11 @@ type GameCardProps = React.ComponentProps<typeof Card> & {
     seatLimit: number,
     emptySeat: number,
     creator: string
-};
-
-enum status {
-    default = 0,
-    success = 1,
-    error = 2
 }
 
-export function GameCard({ className, ...props }: GameCardProps) {
-    const [isLoading, setIsLoading] = useState(false);
-    const [open, setOpen] = useState(false);
+export function PublicGame({ className, ...props }: GameCardProps) {
+    const [isLoading, setIsLoading] = useState(false)
+    const [open, setOpen] = useState(false)
     const [isFinished, setFinished] = useState(false)
 
     useEffect(() => {
@@ -121,13 +115,13 @@ export function GameCard({ className, ...props }: GameCardProps) {
                                             <Button
                                                 onClick={() => {
                                                     console.log(`DORO ${props.id}`)
-                                                    setIsLoading(true);
+                                                    setIsLoading(true)
 
                                                     // TODO: Disconnect (Mock Loading)
                                                     delay(500).finally(() => {
-                                                        setIsLoading(false);
+                                                        setIsLoading(false)
                                                         setFinished(true)
-                                                    });
+                                                    })
                                                 }}>DORO
                                             </Button>
                                         ) : (
@@ -142,7 +136,7 @@ export function GameCard({ className, ...props }: GameCardProps) {
                             <div>
                                 <DialogHeader>
                                     <DialogTitle>
-                                        Good Luck
+                                        GOOD LUCK
                                     </DialogTitle>
                                     <div className="grid gap-4 py-4 items-center justify-center">
                                         <PartyPopperIcon />
@@ -166,5 +160,5 @@ export function GameCard({ className, ...props }: GameCardProps) {
             </DialogContent >
         </Dialog >
 
-    );
+    )
 }
