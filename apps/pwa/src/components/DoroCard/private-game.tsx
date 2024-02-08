@@ -2,24 +2,13 @@ import { useEffect, useState } from "react"
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
     DialogClose
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
 import { Spinner } from "@/components/Spinner"
 import { delay } from "@/lib/utils"
 import {
@@ -87,7 +76,7 @@ export function PrivateGame({ className, ...props }: any) {
     const [privateList, setPrivateList] = useState(mockPrivateList)
 
     const getPrivateGame = () => {
-        const game = mockPrivateList.find(game => game.id === gameId && game.inviteCode === inviteCode)
+        const game = privateList.find(game => game.id === gameId && game.inviteCode === inviteCode)
         if (game) {
             setGameInfo(game)
             setOpen(true)
@@ -106,18 +95,32 @@ export function PrivateGame({ className, ...props }: any) {
     return (
         <>
             <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="email">Game ID</Label>
+                <Label htmlFor="game-id">Game ID</Label>
                 <Input type="text" id="game-id" onChange={(e) => setGameId(e.target.value)} />
             </div>
             <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="email">Invite Code</Label>
+                <Label htmlFor="invite-code">Invite Code</Label>
                 <Input type="text" id="invite-code" onChange={(e) => setInviteCode(e.target.value)} />
             </div>
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Button
-                    onClick={getPrivateGame}
-                >Join Game</Button>
-            </div>
+            {!isLoading ? (
+                <div className="grid w-full max-w-sm items-center gap-1.5">
+                    <Button
+                        onClick={() => {
+                            setIsLoading(true)
+                            // TODO: Search (Mock Loading)
+                            delay(500).finally(() => {
+                                setIsLoading(false)
+                                getPrivateGame()
+                            })
+                        }
+                        }
+                    >Join Game</Button>
+                </div>
+            ) : (
+                <div className="flex w-full justify-center">
+                    <Spinner />
+                </div>
+            )}
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="max-w-[250px]">
                     {open
@@ -161,7 +164,7 @@ export function PrivateGame({ className, ...props }: any) {
                                                         console.log(`DORO ${gameInfo?.id}`)
                                                         setIsLoading(true)
 
-                                                        // TODO: Disconnect (Mock Loading)
+                                                        // TODO: DORO (Mock Loading)
                                                         delay(500).finally(() => {
                                                             setIsLoading(false)
                                                             setFinished(true)
