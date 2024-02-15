@@ -9,5 +9,6 @@ export default (app: OpenAPIHono) => {
       title: 'Doro API',
     },
   })
-  app.get('/ui', swaggerUI({ url: '/doc' }))
+  app.get('/swagger-ui', swaggerUI({ url: '/doc' }))
+  console.log('Swagger UI is available at http://localhost:8787/swagger-ui')
 }
