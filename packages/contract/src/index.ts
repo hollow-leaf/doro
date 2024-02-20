@@ -1,3 +1,3 @@
-import { Mental } from "./mental.js"
+import { Roulette } from "./roulette.js"
 
-export { Mental }
+export { Roulette }
