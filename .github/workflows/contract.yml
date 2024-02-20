@@ -1,4 +1,4 @@
-name: Backend deploy
+name: Contract Test
 
 on: 
   push:
@@ -7,7 +7,7 @@ on:
       - chore/fix-ci
     paths:
       - '.github/**'
-      - 'apps/backend/**'
+      - 'apps/contract/**'
 
 permissions:
   contents: read
@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout 🛎️
@@ -37,20 +37,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Create Env File
-        run: |
-          touch ./apps/backend/.env
-          echo COUCHDB_PASSWORD=${{secrets.COUCHDB_PASSWORD}} >> ./apps/backend/.env
-          echo COUCHDB_USER=${{secrets.COUCHDB_USER}} >> ./apps/backend/.env
-
       - name: Build 
-        run: pnpm build --filter backend
+        run: pnpm build --filter contract
         
-      - name: Build and Deploy Docker
-        working-directory: ./apps/backend
-        env:
-          COUCHDB_USER: ${{secrets.COUCHDB_USER}}
-          COUCHDB_PASSWORD: ${{secrets.COUCHDB_PASSWORD}}
+      - name: Test
         run: |
-          chmod +x ./scripts/cicd.sh
-          ./scripts/cicd.sh
+          pnpm test --filter contract
+          
