@@ -1,8 +1,11 @@
 import { z } from 'zod'
 import { createParamSchema, createSchema } from '../utils';
 
+type Binding = {
+  "mina-doro": KVNamespace
+}
 export const ParamsSchema = z.object({
-  id: createParamSchema('id', 'string', 3),
+  id: createParamSchema('id', 'string', 2),
 });
 
 export const UserSchema = createSchema('User', {
