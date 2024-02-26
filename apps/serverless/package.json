@@ -1,4 +1,5 @@
 {
+  "name": "serverless",
   "scripts": {
     "dev": "wrangler dev src/app.ts",
     "deploy": "wrangler deploy --minify src/app.ts"
