@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "./styles/globals.css";
+import { NavLinksProvider } from "@/context/NavLinksProvider";
+import { Viewport } from "next";
+import { ThemeProvider } from "@/components/theme-provider"
 
-const APP_NAME = "Doro1";
+const APP_NAME = "Doro";
 const APP_DESCRIPTION = "This is an example of using Serwist with Next.js";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -29,6 +32,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  width: "device-width",
+  initialScale: 1.0,
+  maximumScale: 1.0,
+  userScalable: false,
+};
 
 export default function RootLayout({
   children,
@@ -37,7 +47,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <NavLinksProvider>
+        <body className={inter.className}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </body>
+      </NavLinksProvider>
     </html>
   );
 }
