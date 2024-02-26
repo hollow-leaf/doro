@@ -11,7 +11,7 @@
 - [Mobile App](https://github.com/hollow-leaf/doro-mobile/)
 
 ### Contracts
-- [Berkeley ZKapp: 62qrmRifvNnkRaKqw62Z84JGS5dn6cAgvZtLXsDpRLRH4zrxjLhCti ](https://minascan.io/berkeley/account/B62qrmRifvNnkRaKqw62Z84JGS5dn6cAgvZtLXsDpRLRH4zrxjLhCti/zkApp?type=zk-acc)
+- [Old Berkeley ZKapp: 62qrmRifvNnkRaKqw62Z84JGS5dn6cAgvZtLXsDpRLRH4zrxjLhCti ](https://minascan.io/berkeley/account/B62qrmRifvNnkRaKqw62Z84JGS5dn6cAgvZtLXsDpRLRH4zrxjLhCti/zkApp?type=zk-acc)
 
 ### Problem & Solution
 - Secure and Participative: Doro revolutionizes lottery systems with advanced cryptographic technology. At its core is the ElGamal homomorphic encryption algorithm, ensuring absolute security and fairness.

@@ -1,13 +1,13 @@
 {
   "version": 1,
   "deployAliases": {
-    "mental": {
+    "roulette": {
       "url": "https://proxy.berkeley.minaexplorer.com/graphql",
-      "keyPath": "keys/mental.json",
-      "feepayerKeyPath": "/Users/cfh00887059/.cache/zkapp-cli/keys/test-account.json",
+      "keyPath": "keys/roulette.json",
+      "feepayerKeyPath": "/Users/kidney/.cache/zkapp-cli/keys/account.json",
       "feepayerAlias": "test-account",
-      "fee": "0.1",
-      "smartContract": "Mental"
+      "fee": "0.5",
+      "smartContract": "Roulette"
     }
   }
 }
