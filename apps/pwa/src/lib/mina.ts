@@ -1,18 +1,19 @@
-import Client from 'mina-signer';
-const client = new Client({ network: 'mainnet' });
+import './reactCOIServiceWorker';
 
-export const generateKey = () => {
-    const keypair = client.genKeys();
-    localStorage.setItem("MinaKey", JSON.stringify(keypair))
-    return {key: keypair.privateKey, pub: keypair.publicKey}
+export const generateKey = async () => {
+    const { PrivateKey } = await import('o1js');
+    const key = PrivateKey.random()
+    localStorage.setItem("MinaKey", key.toBase58())
+    return {key: key.toBase58(), pub: key.toPublicKey().toBase58()}
 }
 
 export const getMinaWallet = async () => {
+    const { PrivateKey } = await import('o1js');
     const minaKey = localStorage.getItem("MinaKey")
     if (minaKey) {
         return {
-            pub: JSON.parse(minaKey).publicKey,
-            key: JSON.parse(minaKey).privateKey
+            pub: PrivateKey.fromBase58(minaKey).toPublicKey().toBase58(),
+            key: minaKey
         }
     }
     return null
