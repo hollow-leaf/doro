@@ -33,8 +33,8 @@ export default function page() {
     const [disconnectOpen, setDisconnectOpen] = useState(false)
     const [exportOpen, setExportOpen] = useState(false)
 
-    const createAccount = () => {
-        const { key, pub } = generateKey()
+    const createAccount = async () => {
+        const { key, pub } = await generateKey()
         setWallet(shortenText(pub, 10))
         setSinged(true)
     }
