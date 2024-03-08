@@ -10,7 +10,17 @@ const withSerwist = withSerwistInit({
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  webpack: config => {
+    // config.resolve.alias = {
+    //   ...config.resolve.alias,
+    //   o1js: resolve('node_modules/o1js'),
+    // };
+    // config.experiments = { ...config.experiments, topLevelAwait: true };
+    // config.optimization.minimizer = [];
+    config.resolve.fallback = { fs: false, net: false, tls: false };
+    return config;
+  },
+  reactStrictMode: false,
   images: {
     unoptimized: true
   },
