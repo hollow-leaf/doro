@@ -11,7 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import ReportForm from "./NewGameForm";
+import NewGameForm from "./NewGameForm";
 
 export default function NavBar({ className }: { className?: string }) {
   const path = usePathname();
@@ -58,7 +58,7 @@ export default function NavBar({ className }: { className?: string }) {
               New Game
             </SheetTitle>
           </SheetHeader>
-          <ReportForm setSheetOpen={setSheetOpen} />
+          <NewGameForm setSheetOpen={setSheetOpen} />
         </SheetContent>
       </Sheet>
     </>
