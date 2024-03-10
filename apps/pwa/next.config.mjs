@@ -1,5 +1,6 @@
 // @ts-check
 import withSerwistInit from "@serwist/next";
+import { resolve } from "path";
 
 const withSerwist = withSerwistInit({
   cacheOnFrontEndNav: true,
@@ -11,12 +12,21 @@ const withSerwist = withSerwistInit({
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   webpack: config => {
-    // config.resolve.alias = {
-    //   ...config.resolve.alias,
-    //   o1js: resolve('node_modules/o1js'),
-    // };
-    // config.experiments = { ...config.experiments, topLevelAwait: true };
-    // config.optimization.minimizer = [];
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      o1js: resolve('node_modules/o1js'),
+    };
+    config.module.rules.push({
+      test: /\.worker\.ts$/,
+      loader: 'worker-loader',
+      options: {
+        inline: true,
+        name: 'static/[hash].zkappWorker.ts',
+        publicPath: '/_next/',
+      },
+    });
+    config.experiments = { ...config.experiments, topLevelAwait: true };
+    config.optimization.minimizer = [];
     config.resolve.fallback = { fs: false, net: false, tls: false };
     return config;
   },

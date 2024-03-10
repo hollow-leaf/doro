@@ -68,8 +68,8 @@ const functions = {
     return state.transaction!.toJSON();
   },
   getResult: async (args: {}) => {
-    const currentNum = await state.zkapp!.result.get();
-    return JSON.stringify(currentNum.toJSON());
+    const currentResult = await state.zkapp!.result.get();
+    return JSON.stringify(currentResult.toJSON());
   }
 
 };
