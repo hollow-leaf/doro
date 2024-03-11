@@ -24,7 +24,10 @@ import { Spinner } from "../Spinner";
 import { useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import '@/lib/reactCOIServiceWorker';
-
+import { getMinaWallet } from "@/lib/mina";
+import { Roulette } from 'contract'
+import { Mina } from 'o1js'
+type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
 
 //---------------------------------
 let transactionFee = 1;
@@ -55,7 +58,10 @@ export default function NewGameForm({
     currentResult: null as null | any,
     publicKey: null as null | any,
     zkappPublicKey: null as null | any,
-    creatingTransaction: false
+    creatingTransaction: false,
+    Roulette: null as null | any,
+    zkapp: null as null | Roulette,
+    transaction: null as null | Transaction
   });
 
   const [displayText, setDisplayText] = useState('');
@@ -64,9 +70,11 @@ export default function NewGameForm({
   useEffect(() => {
     (async () => {
       setIsLoading(true)
-      const initState = await minaSetup()
-      if (initState) {
-        setState(initState)
+      if (!state.hasBeenSetup) {
+        const initState = await minaSetup()
+        if (initState) {
+          setState(initState)
+        }
       }
       setIsLoading(false)
     })();
@@ -76,12 +84,9 @@ export default function NewGameForm({
     (async () => {
       if (state.hasBeenSetup && !state.accountExists) {
         for (; ;) {
-          setDisplayText('Checking if fee payer account exists...');
           console.log('Checking if fee payer account exists...');
-          const res = await state.zkappWorkerClient!.fetchAccount({
-            publicKey: state.publicKey!
-          });
-          const accountExists = res.error == null;
+          const minaWallet = await getMinaWallet()
+          const accountExists = minaWallet ? true : false;
           if (accountExists) {
             break;
           }
@@ -92,13 +97,21 @@ export default function NewGameForm({
     })();
   }, [state.hasBeenSetup]);
 
-  // const createTx = async () => {
-  //   const zkappWorkerClient = new ZkappWorkerClient();
-  //   const mina = (window as any).mina;
-  //   const publicKeyBase58: string = (await mina.requestAccounts())[0];
-  //   const publicKey = PublicKey.fromBase58(publicKeyBase58);
-  //   await zkappWorkerClient.setPubKeyTransaction()
-  // }
+  const createTx = async () => {
+    const { PublicKey, Mina, Field, PrivateKey } = await import('o1js')
+    const minaWallet = await getMinaWallet()
+    const publicKeyBase58: string = minaWallet?.pub ?? 'B62qjhvkfF1JUoU9tjuUHjxtTtenM3z9ry8hGUnrCDiTrGCfmPYsUDB';
+    const publicKey = PublicKey.fromBase58(publicKeyBase58);
+    let privatekey: string = 'TEST'
+    const transaction = await Mina.transaction(() => {
+      state.zkapp?.setPubKey(Field(0));
+    });
+
+    state.transaction = transaction as Transaction;
+    await state.transaction?.prove()
+    await state.transaction?.sign([PrivateKey.fromBase58(privatekey)]).send()
+
+  }
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -115,7 +128,7 @@ export default function NewGameForm({
     // ✅ This will be type-safe and validated.
     setIsLoading(true);
     //TODO: Add Game via mina contract
-
+    await createTx()
     setIsLoading(false);
     setSheetOpen(false);
   }
@@ -204,9 +217,12 @@ async function timeout(seconds: number): Promise<void> {
 async function minaSetup() {
   const { PublicKey, Mina, PrivateKey, Field, fetchAccount } = await import('o1js')
   const { getMinaWallet } = await import('@/lib/mina')
+  type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
+  const { Roulette } = await import('contract');
+
 
   // // Do Setup
-  const initialState = {
+  let initialState = {
     zkappWorkerClient: null as null | any,
     hasWallet: null as null | boolean,
     hasBeenSetup: false,
@@ -214,7 +230,10 @@ async function minaSetup() {
     currentResult: null as null | any,
     publicKey: null as null | any,
     zkappPublicKey: null as null | any,
-    creatingTransaction: false
+    creatingTransaction: false,
+    Roulette: null as null | typeof Roulette,
+    zkapp: null as null | any,
+    transaction: null as null | Transaction
   };
 
   // if (!state.hasBeenSetup) {
@@ -238,6 +257,8 @@ async function minaSetup() {
     initialState.hasWallet = false
     return;
   }
+
+  // TODO: Mina key is empty wallet by generateKey.
   // const minaPubKey = mina.pub
   const minaPubKey = 'B62qjhvkfF1JUoU9tjuUHjxtTtenM3z9ry8hGUnrCDiTrGCfmPYsUDB'
   let publicKeyBase58: string
@@ -258,37 +279,29 @@ async function minaSetup() {
   const accountExists = true;
 
   // Load Contract
-  const { Roulette } = await import('contract');
-
-  type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
-  const state = {
-    Roulette: null as null | typeof Roulette,
-    zkapp: null as null | any,
-    transaction: null as null | Transaction
-  };
-  state.Roulette = Roulette
+  initialState.Roulette = Roulette
 
   // Compile Contract 
   console.log('Compiling zkApp...');
-  await state.Roulette!.compile()
+  await initialState.Roulette!.compile()
   console.log('zkApp compiled');
 
   // Initial ZK App Instance
   const zkappPublicKey = PublicKey.fromBase58(ZKAPP_ADDRESS);
-  state.zkapp = new state.Roulette!(zkappPublicKey);
+  initialState.zkapp = new initialState.Roulette!(zkappPublicKey);
 
   // Get ZK App state
-  console.log('Getting zkApp state...');
-  const currentResultRaw = await state.zkapp!.result.get()
-  const currentResult = JSON.stringify(currentResultRaw.toJson())
-  console.log(`Current result in zkApp: ${currentResult.toString()}`);
+  // console.log('Getting zkApp state...');
+  // const currentResultRaw = await initialState.zkapp!.result.get()
+  // const currentResult = JSON.stringify(currentResultRaw.toJson())
+  // console.log(`Current result in zkApp: ${currentResult.toString()}`);
 
   initialState.hasWallet = true
   initialState.hasBeenSetup = true
   initialState.publicKey = null
   initialState.zkappPublicKey = zkappPublicKey
   initialState.accountExists = accountExists
-  initialState.currentResult = currentResult
+  initialState.currentResult = null
   initialState.creatingTransaction = false
 
   return initialState
