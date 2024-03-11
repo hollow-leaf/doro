@@ -24,7 +24,7 @@ import { Spinner } from "../Spinner";
 import { useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import '@/lib/reactCOIServiceWorker';
-import { getMinaWallet } from "@/lib/mina";
+import { getMinaWallet, minaSetup, timeout } from "@/lib/mina";
 import { Roulette } from 'contract'
 import { Mina } from 'o1js'
 type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
@@ -71,7 +71,7 @@ export default function NewGameForm({
     (async () => {
       setIsLoading(true)
       if (!state.hasBeenSetup) {
-        const initState = await minaSetup()
+        const initState = await minaSetup(ZKAPP_ADDRESS)
         if (initState) {
           setState(initState)
         }
@@ -97,14 +97,17 @@ export default function NewGameForm({
     })();
   }, [state.hasBeenSetup]);
 
-  const createTx = async () => {
+  const setupNewGame = async () => {
     const { PublicKey, Mina, Field, PrivateKey } = await import('o1js')
+    const { ElGamalFF } = await import("o1js-elgamal")
+
     const minaWallet = await getMinaWallet()
     const publicKeyBase58: string = minaWallet?.pub ?? 'B62qjhvkfF1JUoU9tjuUHjxtTtenM3z9ry8hGUnrCDiTrGCfmPYsUDB';
     const publicKey = PublicKey.fromBase58(publicKeyBase58);
     let privatekey: string = 'TEST'
-    const transaction = await Mina.transaction(() => {
-      state.zkapp?.setPubKey(Field(0));
+    const transaction = await Mina.transaction(publicKey, () => {
+      const { pk, sk } = ElGamalFF.generateKeys()
+      state.zkapp?.setPubKey(pk);
     });
 
     state.transaction = transaction as Transaction;
@@ -128,16 +131,10 @@ export default function NewGameForm({
     // ✅ This will be type-safe and validated.
     setIsLoading(true);
     //TODO: Add Game via mina contract
-    await createTx()
+    await setupNewGame()
     setIsLoading(false);
     setSheetOpen(false);
   }
-  // useEffect(() => {
-  //   (async () => {
-  //     const { pub, key } = await getMinaWallet()
-  //     await sendTx(pub, key)
-  //   })();
-  // }, []);
 
   return (
     <>
@@ -204,108 +201,6 @@ export default function NewGameForm({
   );
 }
 
-
-async function timeout(seconds: number): Promise<void> {
-  return new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, seconds * 1000);
-  });
-}
-
-
-async function minaSetup() {
-  const { PublicKey, Mina, PrivateKey, Field, fetchAccount } = await import('o1js')
-  const { getMinaWallet } = await import('@/lib/mina')
-  type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
-  const { Roulette } = await import('contract');
-
-
-  // // Do Setup
-  let initialState = {
-    zkappWorkerClient: null as null | any,
-    hasWallet: null as null | boolean,
-    hasBeenSetup: false,
-    accountExists: false,
-    currentResult: null as null | any,
-    publicKey: null as null | any,
-    zkappPublicKey: null as null | any,
-    creatingTransaction: false,
-    Roulette: null as null | typeof Roulette,
-    zkapp: null as null | any,
-    transaction: null as null | Transaction
-  };
-
-  // if (!state.hasBeenSetup) {
-  console.log('Loading web worker...');
-  await timeout(5);
-
-  console.log('Done loading web worker');
-
-  // Setup InstanceToBerkeley
-  const Berkeley = Mina.Network(
-    'https://api.minascan.io/node/berkeley/v1/graphql'
-  );
-  console.log('Berkeley Instance Created');
-  Mina.setActiveInstance(Berkeley);
-  await timeout(5);
-
-
-  // Get Wallet
-  const mina = await getMinaWallet()
-  if (mina == null) {
-    initialState.hasWallet = false
-    return;
-  }
-
-  // TODO: Mina key is empty wallet by generateKey.
-  // const minaPubKey = mina.pub
-  const minaPubKey = 'B62qjhvkfF1JUoU9tjuUHjxtTtenM3z9ry8hGUnrCDiTrGCfmPYsUDB'
-  let publicKeyBase58: string
-  let publicKey
-  if (minaPubKey) {
-    publicKeyBase58 = (minaPubKey) as string;
-    publicKey = PublicKey.fromBase58(publicKeyBase58);
-    console.log(`Using key:${publicKey.toBase58()}`);
-  }
-  console.log('Checking if fee payer account exists...');
-  // Skip fetch account
-  // let res
-  // if (publicKey) {
-  //   res = await fetchAccount({ publicKey });
-  // }
-  // console.log(res)
-  // const accountExists = res?.error == null;
-  const accountExists = true;
-
-  // Load Contract
-  initialState.Roulette = Roulette
-
-  // Compile Contract 
-  console.log('Compiling zkApp...');
-  await initialState.Roulette!.compile()
-  console.log('zkApp compiled');
-
-  // Initial ZK App Instance
-  const zkappPublicKey = PublicKey.fromBase58(ZKAPP_ADDRESS);
-  initialState.zkapp = new initialState.Roulette!(zkappPublicKey);
-
-  // Get ZK App state
-  // console.log('Getting zkApp state...');
-  // const currentResultRaw = await initialState.zkapp!.result.get()
-  // const currentResult = JSON.stringify(currentResultRaw.toJson())
-  // console.log(`Current result in zkApp: ${currentResult.toString()}`);
-
-  initialState.hasWallet = true
-  initialState.hasBeenSetup = true
-  initialState.publicKey = null
-  initialState.zkappPublicKey = zkappPublicKey
-  initialState.accountExists = accountExists
-  initialState.currentResult = null
-  initialState.creatingTransaction = false
-
-  return initialState
-}
 
 async function workerSetup() {
   const { PublicKey, Mina, PrivateKey, Field } = await import('o1js')
