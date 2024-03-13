@@ -1,3 +1,3 @@
 import { Roulette } from "./roulette.js"
-
-export { Roulette }
+import { RoulettePG } from "./roulettePG.js"
+export { Roulette, RoulettePG }
