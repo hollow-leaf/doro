@@ -57,6 +57,7 @@ export const RoulettePG = ZkProgram({
 
 const { verificationKey } = await RoulettePG.compile()
 class RouletteProof extends ZkProgram.Proof(RoulettePG) {}
+
 export class RoulettePGContract extends SmartContract {
   @state(Cipher) c1 = State<Cipher>()
   @state(Field) pk = State<Field>()
