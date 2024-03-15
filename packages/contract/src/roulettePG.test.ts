@@ -1,3 +1,5 @@
+/* global describe, beforeAll, beforeEach, it */
+import { ElGamalFF } from "o1js-elgamal"
 import { RoulettePG, RoulettePGContract } from "./roulettePG"
 import { Mina, PrivateKey, PublicKey, AccountUpdate, Field } from "o1js"
 const proofsEnabled = false
@@ -37,11 +39,40 @@ describe("RoulettePG ZKProgram", () => {
     await txn.sign([deployerKey, zkAppPrivateKey]).send()
   }
 
+  function randomInt (min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
+  }
+
   describe("RoulettePGContract", () => {
     it("should deploy", async () => {
       await localDeploy()
       // first proof
       const proof = await RoulettePG.init(Field(0))
+    })
+
+    it("Game Play", async () => {
+      // step 1. set a elagamal public key (game starter)
+      const { pk, sk } = ElGamalFF.generateKeys()
+
+      const txn = await Mina.transaction(deployerAccount, () => {
+        zkApp.setPubKey(pk)
+      })
+      await txn.prove()
+      await txn.sign([deployerKey]).send()
+
+      // step 2. everyone join a game
+      let proof = await RoulettePG.init(Field(0))
+      for (let i = 0; i < 10; i += 1) {
+        const randomValue = Field(randomInt(1, 10000))
+        proof = await RoulettePG.shuffle(Field(i), proof, randomValue)
+      }
+
+      // step 3. spinner
+      const txR = await Mina.transaction(deployerAccount, () => {
+        zkApp.setResults(proof)
+      })
+      await txR.prove()
+      await txR.sign([deployerKey]).send()
     })
   })
 })

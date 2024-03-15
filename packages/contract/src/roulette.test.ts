@@ -5,7 +5,6 @@ import {
   Mina,
   AccountUpdate,
   PublicKey,
-  shutdown,
 } from "o1js"
 import { ElGamalFF } from "o1js-elgamal"
 import { Roulette } from "./roulette"
