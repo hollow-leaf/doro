@@ -1,8 +1,8 @@
 import { RoulettePG, RoulettePGContract } from "./roulettePG"
-import { Mina, PrivateKey, PublicKey, AccountUpdate } from "o1js"
+import { Mina, PrivateKey, PublicKey, AccountUpdate, Field } from "o1js"
 const proofsEnabled = false
 
-describe("Roulette ZKProgram", () => {
+describe("RoulettePG ZKProgram", () => {
   let deployerAccount: PublicKey,
     deployerKey: PrivateKey,
     senderAccount: PublicKey,
@@ -36,4 +36,12 @@ describe("Roulette ZKProgram", () => {
     // this tx needs .sign(), because `deploy()` adds an account update that requires signature authorization
     await txn.sign([deployerKey, zkAppPrivateKey]).send()
   }
+
+  describe("RoulettePGContract", () => {
+    it("should deploy", async () => {
+      await localDeploy()
+      // first proof
+      const proof = await RoulettePG.init(Field(0))
+    })
+  })
 })

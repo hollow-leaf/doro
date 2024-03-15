@@ -12,7 +12,7 @@ import { Roulette } from "./roulette"
 
 const proofsEnabled = false
 
-describe("CH2.SpyMasterContract", () => {
+describe("Roullette Test", () => {
   let deployerAccount: PublicKey,
     deployerKey: PrivateKey,
     senderAccount: PublicKey,
