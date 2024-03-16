@@ -29,17 +29,10 @@ export const RoulettePG = ZkProgram({
     shuffle: {
       privateInputs: [SelfProof, Field],
 
-      method (messageNumber: Field, earlierProof: SelfProof<Field, Cipher>, randomNumber: Field, pk: Field) {
-        // messageNumber.set(msgNumber)
+      method (pk: Field, earlierProof: SelfProof<Field, Cipher>, randomNumber: Field) {
         earlierProof.verify()
         const output = earlierProof.publicOutput.mul(ElGamalFF.encrypt(randomNumber, pk))
-        const isValid = Bool(true)
-        return Provable.if(
-          isValid,
-          Field,
-          randomNumber,
-          earlierProof.publicOutput,
-        )
+        return output
       },
     },
   },
@@ -52,17 +45,17 @@ class RouletteProof extends ZkProgram.Proof(RoulettePG) {}
 export class RoulettePGContract extends SmartContract {
   @state(Cipher) c1 = State<Cipher>()
   @state(Field) pk = State<Field>()
-  @state(Field) result = State<Field>()
+  @state(Field) resultCipher = State<Field>()
 
   @method setPubKey (pk: Field) {
     this.pk.set(pk)
     this.c1.set(ElGamalFF.encrypt(Field(1), pk))
   }
 
-  @method setResults (proof: RouletteProof) {
+  @method setResults (proof: RouletteProof, result: Field) {
     proof.verify()
 
-    const result = proof.publicOutput
-    this.result.set(result)
+    // const result = proof.publicOutput
+    this.resultCipher.set(result)
   }
 }

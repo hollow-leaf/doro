@@ -69,7 +69,7 @@ describe("RoulettePG ZKProgram", () => {
 
       // step 3. spinner
       const txR = await Mina.transaction(deployerAccount, () => {
-        zkApp.setResults(proof)
+        zkApp.setResults(proof, Field(0))
       })
       await txR.prove()
       await txR.sign([deployerKey]).send()
