@@ -11,43 +11,33 @@ import {
 } from "o1js"
 import { Cipher, ElGamalFF } from "o1js-elgamal"
 
+// free and off-chain doro program
 export const RoulettePG = ZkProgram({
   name: "roulette-program",
   publicInput: Field,
-  publicOutput: Field,
+  publicOutput: Cipher,
 
   methods: {
     init: {
       privateInputs: [],
-      method (publicInput: Field) {
-        publicInput.assertEquals(0)
-        return publicInput
+      method (pk: Field) {
+        const publicOutput = ElGamalFF.encrypt(Field(1), pk)
+        return publicOutput
       },
     },
-    processMessage: {
-      privateInputs: [SelfProof, Field],
 
-      method (messageNumber: Field, earlierProof: SelfProof<Field, Field>, message: Field) {
-        // messageNumber.set(msgNumber)
-        const isValid = Bool(true)
-        return Provable.if(
-          isValid,
-          Field,
-          messageNumber,
-          earlierProof.publicOutput,
-        )
-      },
-    },
     shuffle: {
       privateInputs: [SelfProof, Field],
 
-      method (messageNumber: Field, earlierProof: SelfProof<Field, Field>, message: Field) {
+      method (messageNumber: Field, earlierProof: SelfProof<Field, Cipher>, randomNumber: Field, pk: Field) {
         // messageNumber.set(msgNumber)
+        earlierProof.verify()
+        const output = earlierProof.publicOutput.mul(ElGamalFF.encrypt(randomNumber, pk))
         const isValid = Bool(true)
         return Provable.if(
           isValid,
           Field,
-          messageNumber,
+          randomNumber,
           earlierProof.publicOutput,
         )
       },
@@ -58,6 +48,7 @@ export const RoulettePG = ZkProgram({
 const { verificationKey } = await RoulettePG.compile()
 class RouletteProof extends ZkProgram.Proof(RoulettePG) {}
 
+// only game admin can deploy this contract (will optimize to multi game)
 export class RoulettePGContract extends SmartContract {
   @state(Cipher) c1 = State<Cipher>()
   @state(Field) pk = State<Field>()
