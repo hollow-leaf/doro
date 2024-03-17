@@ -45,17 +45,17 @@ class RouletteProof extends ZkProgram.Proof(RoulettePG) {}
 export class RoulettePGContract extends SmartContract {
   @state(Cipher) c1 = State<Cipher>()
   @state(Field) pk = State<Field>()
-  @state(Field) resultCipher = State<Field>()
+  @state(Field) result = State<Field>()
 
   @method setPubKey (pk: Field) {
     this.pk.set(pk)
     this.c1.set(ElGamalFF.encrypt(Field(1), pk))
   }
 
-  @method setResults (proof: RouletteProof, result: Field) {
+  @method setResults (proof: RouletteProof, sk: Field) {
     proof.verify()
 
-    // const result = proof.publicOutput
-    this.resultCipher.set(result)
+    const result = ElGamalFF.decrypt(proof.publicOutput as Cipher, sk)
+    this.result.set(result)
   }
 }
