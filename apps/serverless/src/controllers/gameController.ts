@@ -1,6 +1,6 @@
 // lobby function
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi"
-import { UserSchema, ParamsSchema } from "../models/userModel"
+import { gameSchema, bodySchema } from "../models/gameModel"
 import { createController, ResponseType } from "../utils"
 
 const responses: ResponseType[] = [
@@ -8,7 +8,7 @@ const responses: ResponseType[] = [
     statusCode: 200,
     content: {
       'application/json': {
-        schema: UserSchema,
+        schema: gameSchema,
       },
     },
     description: 'Retrieve the user',
@@ -19,17 +19,17 @@ const responses: ResponseType[] = [
   },
 ];
 
-const UserController = createController('get', '/users/{id}', ParamsSchema, responses)
+const UserController = createController('post', '/game/{id}', gameSchema, responses, bodySchema)
 
 export default (app: OpenAPIHono) => {
-  // path: /users/{id}
-  app.openapi(UserController, (c: any) => {
+  // path: /game/{id}
+  app.openapi(UserController, async (c: any) => {
     const { id } = c.req.valid('param') as any
+    const { data } = c.req.valid('json') as any
+    await c.env.doro?.put(`game-${id}`, data)
+   
     return c.json({
-      id,
-      age: 20,
-      name: 'Ultra-man',
-      d: 'a'
+      id
     })
   })
 }

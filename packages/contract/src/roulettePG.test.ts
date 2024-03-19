@@ -1,7 +1,7 @@
 /* global describe, beforeAll, beforeEach, it */
 import { Cipher, ElGamalFF } from "o1js-elgamal"
 import { RoulettePG, RoulettePGContract } from "./roulettePG"
-import { Mina, PrivateKey, PublicKey, AccountUpdate, Field } from "o1js"
+import { Mina, PrivateKey, PublicKey, AccountUpdate, Field, Proof } from "o1js"
 const proofsEnabled = false
 
 describe("RoulettePG ZKProgram", () => {
@@ -75,6 +75,9 @@ describe("RoulettePG ZKProgram", () => {
       })
       await txR.prove()
       await txR.sign([deployerKey]).send()
+
+      const result = zkApp.result.get()
+      console.log("result", result)
     })
   })
 })
