@@ -39,7 +39,7 @@ export const RoulettePG = ZkProgram({
 })
 
 const { verificationKey } = await RoulettePG.compile()
-class RouletteProof extends ZkProgram.Proof(RoulettePG) {}
+export class RouletteProof extends ZkProgram.Proof(RoulettePG) {}
 
 // only game admin can deploy this contract (will optimize to multi game)
 export class RoulettePGContract extends SmartContract {

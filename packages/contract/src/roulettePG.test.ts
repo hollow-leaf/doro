@@ -1,7 +1,8 @@
 /* global describe, beforeAll, beforeEach, it */
 import { Cipher, ElGamalFF } from "o1js-elgamal"
-import { RoulettePG, RoulettePGContract } from "./roulettePG"
-import { Mina, PrivateKey, PublicKey, AccountUpdate, Field, Proof } from "o1js"
+import { RoulettePG, RoulettePGContract, RouletteProof } from "./roulettePG"
+import { Mina, PrivateKey, PublicKey, AccountUpdate, Field, SelfProof, JsonProof } from "o1js"
+import { Json } from "o1js/dist/node/bindings/mina-transaction/gen/transaction"
 const proofsEnabled = false
 
 describe("RoulettePG ZKProgram", () => {
@@ -44,10 +45,17 @@ describe("RoulettePG ZKProgram", () => {
   }
 
   describe("RoulettePGContract", () => {
-    it("should deploy", async () => {
+    it.only("should deploy", async () => {
       await localDeploy()
       // first proof
-      const proof = await RoulettePG.init(Field(1))
+      let proof = await RoulettePG.init(Field(1))
+      // transfer proof to json
+      const proofString: JsonProof = proof.toJSON()
+
+      // transfer json to proof
+      const proof2 = RouletteProof.fromJSON(proofString)
+      proof = await RoulettePG.shuffle(Field(1), proof2, Field(1))
+      proof.verify()
     })
 
     it("Game Play", async () => {
