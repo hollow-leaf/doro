@@ -10,7 +10,7 @@ export type ResponseType = {
   description: string,
 }
 
-export function createController(method: any, path: string, paramsSchema: any, responses: ResponseType[]) {
+export function createController(method: any, path: string, paramsSchema: any, responses: ResponseType[], requestBody?: any) {
   const responseObj: any = {};
   responses.forEach(response => {
     responseObj[response.statusCode] = {
@@ -19,12 +19,25 @@ export function createController(method: any, path: string, paramsSchema: any, r
     };
   });
 
-  return createRoute({
+  return (!requestBody)? createRoute({
     method: method,
     path: path,
     request: {
       params: paramsSchema,
     },
     responses: responseObj,
-  });
+  }): createRoute({
+    method: method,
+    path: path,
+    request: {
+      params: paramsSchema,
+      body: {
+        content: {
+          'application/json': {
+            schema: requestBody,
+          },
+      },},
+    },
+      responses: responseObj,
+      });
 }

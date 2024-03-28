@@ -10,7 +10,7 @@ export function createSchema(name: string, fields: { [key: string]: { type: 'str
   return z.object(schema).openapi(name);
 }
 
-export function createParamSchema(name: string, type: 'string' | 'number', minLength?: number) {
+export function createParamSchema(name: string, type: 'string' | 'number' , minLength?: number, apiLoc = 'path') {
   let schema = z[type]();
   if (type === 'string' && minLength) {
     schema = schema.min(minLength);
@@ -19,7 +19,7 @@ export function createParamSchema(name: string, type: 'string' | 'number', minLe
   return schema.openapi({
     param: {
       name: name,
-      in: 'path',
+      in: apiLoc as 'path' | 'query' | 'header' | 'cookie',
     },
     example: example,
   });
