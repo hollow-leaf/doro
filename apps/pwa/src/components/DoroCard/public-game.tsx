@@ -25,6 +25,7 @@ import { delay } from "@/lib/utils"
 import {
     PartyPopperIcon
 } from "lucide-react"
+import { Mina } from 'o1js'
 
 type GameCardProps = React.ComponentProps<typeof Card> & {
     id: string,
@@ -33,7 +34,8 @@ type GameCardProps = React.ComponentProps<typeof Card> & {
     fee: number,
     seatLimit: number,
     emptySeat: number,
-    creator: string
+    creator: string,
+    joinGame: Function,
 }
 
 export function PublicGame({ className, ...props }: GameCardProps) {
@@ -113,15 +115,11 @@ export function PublicGame({ className, ...props }: GameCardProps) {
                                     {
                                         !isLoading ? (
                                             <Button
-                                                onClick={() => {
+                                                onClick={async () => {
                                                     console.log(`DORO ${props.id}`)
                                                     setIsLoading(true)
-
-                                                    // TODO: Disconnect (Mock Loading)
-                                                    delay(500).finally(() => {
-                                                        setIsLoading(false)
-                                                        setFinished(true)
-                                                    })
+                                                    await props.joinGame()
+                                                    setIsLoading(false)
                                                 }}>DORO
                                             </Button>
                                         ) : (
