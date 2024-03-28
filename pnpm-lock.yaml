@@ -234,11 +234,11 @@ importers:
   packages/contract:
     dependencies:
       o1js:
-        specifier: 0.16.*
-        version: 0.16.2
+        specifier: 0.17.*
+        version: 0.17.0
       o1js-elgamal:
         specifier: ^0.0.10
-        version: 0.0.10(o1js@0.16.2)
+        version: 0.0.10(o1js@0.17.0)
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.16.4
@@ -9149,12 +9149,12 @@ packages:
       o1js: 0.13.1
     dev: false
 
-  /o1js-elgamal@0.0.10(o1js@0.16.2):
+  /o1js-elgamal@0.0.10(o1js@0.17.0):
     resolution: {integrity: sha512-mbTkDfSadoOaG95amx75A+SYxiSz+NTwVmsLBox30Xr2TjMm3i5TU1Fag3/JRgs2GLg1A+rUzbAYeWlp842QMg==}
     peerDependencies:
       o1js: ^0.13.1
     dependencies:
-      o1js: 0.16.2
+      o1js: 0.17.0
     dev: false
 
   /o1js@0.13.1:
@@ -9180,6 +9180,21 @@ packages:
       blakejs: 1.2.1
       cachedir: 2.4.0
       detect-gpu: 5.0.38
+      isomorphic-fetch: 3.0.0
+      js-sha256: 0.9.0
+      reflect-metadata: 0.1.14
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /o1js@0.17.0:
+    resolution: {integrity: sha512-OPQc3jBG2X5z7yI2mcovzRVbd91Q2D/npep14+g0wBdGXpyyAFdaz59YjVlEsPcY1Gmh2L+LCFhVA2fQ+1ogIg==}
+    engines: {node: '>=16.4.0'}
+    hasBin: true
+    dependencies:
+      blakejs: 1.2.1
+      cachedir: 2.4.0
       isomorphic-fetch: 3.0.0
       js-sha256: 0.9.0
       reflect-metadata: 0.1.14
